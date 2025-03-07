@@ -1,21 +1,24 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import navigation
-import '../styles/GamePlay.css'; // Import custom styles
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../styles/GamePlay.css';
 
 interface GamePlayProps {
-  duration: number; // total game duration in seconds
+  duration: number;
   onGameEnd: (score: { correct: number; incorrect: number }) => void;
 }
 
+const API_BASE_URL = "http://localhost:5227/api/game";
+
 const GamePlay: React.FC<GamePlayProps> = ({ duration, onGameEnd }) => {
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(duration);
-  const [currentNumber, setCurrentNumber] = useState(generateRandomNumber());
+  const [currentNumber, setCurrentNumber] = useState<number | null>(null);
   const [userAnswer, setUserAnswer] = useState('');
   const [scoreCorrect, setScoreCorrect] = useState(0);
   const [scoreIncorrect, setScoreIncorrect] = useState(0);
-  const [usedNumbers, setUsedNumbers] = useState<number[]>([currentNumber]);
-  const [answerEffect, setAnswerEffect] = useState<string>(''); // Effect class state
+  const [answerEffect, setAnswerEffect] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scoreCorrectRef = useRef(scoreCorrect);
   const scoreIncorrectRef = useRef(scoreIncorrect);
@@ -39,70 +42,74 @@ const GamePlay: React.FC<GamePlayProps> = ({ duration, onGameEnd }) => {
     return () => clearInterval(timer);
   }, [onGameEnd]);
 
-  function generateRandomNumber(): number {
-    return Math.floor(Math.random() * 100) + 1;
-  }
+  const fetchNumber = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/next`);
+      setCurrentNumber(response.data.number);
+    } catch (error) {
+      console.error("Error fetching number:", error);
+    }
+  };
 
-  function getCorrectAnswer(num: number): string {
-    let answer = '';
-    if (num % 3 === 0) answer += 'Fizz';
-    if (num % 5 === 0) answer += 'Buzz';
-    if (answer === '') answer = num.toString();
-    return answer;
-  }
+  useEffect(() => {
+    fetchNumber();
+  }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const correctAnswer = getCorrectAnswer(currentNumber);
-    
-    if (userAnswer.trim().toLowerCase() === correctAnswer.toLowerCase()) {
-      setScoreCorrect((prev) => prev + 1);
-      setAnswerEffect('correct-flash'); // Apply green flash effect
-    } else {
-      setScoreIncorrect((prev) => prev + 1);
-      setAnswerEffect('wrong-shake'); // Apply red shake effect
+    if (currentNumber === null) return;
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/check`, {
+        number: currentNumber,
+        answer: userAnswer,
+      });
+
+      if (response.data.isCorrect) {
+        setScoreCorrect((prev) => prev + 1);
+        setAnswerEffect('correct-glow');
+      } else {
+        setScoreIncorrect((prev) => prev + 1);
+        setAnswerEffect('wrong-shake');
+      }
+
+      setUserAnswer('');
+      setTimeout(() => setAnswerEffect(''), 500);
+      fetchNumber();
+    } catch (error) {
+      console.error("Error submitting answer:", error);
     }
-
-    setUserAnswer('');
-
-    setTimeout(() => setAnswerEffect(''), 500); // Remove effect after animation
-
-    let newNumber = generateRandomNumber();
-    let attempts = 0;
-    while (usedNumbers.includes(newNumber) && attempts < 10) {
-      newNumber = generateRandomNumber();
-      attempts++;
-    }
-    setUsedNumbers((prev) => [...prev, newNumber]);
-    setCurrentNumber(newNumber);
   };
 
   return (
     <div className="gameplay-container">
       <div className="gameplay-card">
         <h2 className="gameplay-title">Game In Progress</h2>
-        
+
         <div className="digital-timer-container">
           <span className="digital-timer">{timeLeft}s</span>
         </div>
 
         <div className="gameplay-number">
           <p>
-            Number: <span className="current-number">{currentNumber}</span>
+            Number: <span className="current-number">{currentNumber ?? "Loading..."}</span>
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="gameplay-form">
           <div className="mb-3">
             <input
+              ref={inputRef}
               type="text"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
               placeholder="Enter your answer"
-              className={`form-control ${answerEffect}`} // Apply dynamic effect
+              className={`form-control ${answerEffect}`}
+              aria-label="Enter your FizzBuzz answer"
+              autoComplete="off"
             />
           </div>
-          <button type="submit" className="btn btn-submit">
+          <button type="submit" className="btn btn-submit" disabled={!userAnswer.trim()}>
             Submit Answer
           </button>
         </form>
@@ -112,7 +119,6 @@ const GamePlay: React.FC<GamePlayProps> = ({ duration, onGameEnd }) => {
           <p className="incorrect-score">Incorrect: {scoreIncorrect}</p>
         </div>
 
-        {/* Go Back Button */}
         <button className="btn btn-back" onClick={() => navigate('/')}>
           Go Back
         </button>
