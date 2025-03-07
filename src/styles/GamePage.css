@@ -1,0 +1,40 @@
+/* Full height container with centered content */
+.gamepage-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    padding: 20px;
+    width: 100vw;
+  }
+  
+  /* Header title styling */
+  .gamepage-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Game card with shadow */
+  .gamepage-card {
+    background: white;
+    padding: 30px;
+    max-width: 450px;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  /* Add responsive design */
+  @media (max-width: 500px) {
+    .gamepage-title {
+      font-size: 2.5rem;
+    }
+    .gamepage-card {
+      padding: 20px;
+    }
+  }  
