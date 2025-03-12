@@ -1,0 +1,161 @@
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Inter:wght@300;400;600&display=swap");
+
+/* Apply font globally */
+body {
+  font-family: "Poppins", "Inter", sans-serif;
+}
+
+/* Games List Container */
+.games-list-container {
+  background: linear-gradient(to bottom right, #1f3b73, #8b5cf6);
+  min-height: 100vh;
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+}
+
+/* Header */
+.games-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto 20px;
+  flex-wrap: wrap;
+}
+
+.games-title {
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+/* Create Game Button */
+.btn-create {
+  background-color: #ff8c42;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-create:hover {
+  background-color: #e67e22;
+}
+
+/* Games Grid */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+/* Game Card */
+.game-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Game Info */
+.game-card-body {
+  text-align: center;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.game-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f3b73;
+  margin-bottom: 5px;
+}
+
+.game-author {
+  font-size: 1rem;
+  color: #666;
+  font-weight: 400;
+}
+
+/* Game Actions */
+.game-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Buttons */
+.game-actions button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "Inter", sans-serif;
+  border: none;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+/* Edit Button */
+.btn-edit {
+  background-color: #00b8a9;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #008c7e;
+}
+
+/* Delete Button */
+.btn-delete {
+  background-color: #f6416c;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c1294c;
+}
+
+/* Start Button */
+.btn-start {
+  background-color: #ffbb00;
+  color: black;
+}
+
+.btn-start:hover {
+  background-color: #e6a600;
+}
+
+/* No Games Message */
+.no-games {
+  font-size: 1.2rem;
+  margin-top: 20px;
+  color: #f8f8f8;
+  opacity: 0.8;
+}

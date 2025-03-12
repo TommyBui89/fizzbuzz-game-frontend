@@ -1,0 +1,73 @@
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Inter:wght@300;400;600&display=swap");
+
+
+/* Title */
+.rule-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #1f3b73;
+}
+
+/* Rule Row */
+.rule-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+  width: -webkit-fill-available;
+}
+
+/* Input Fields */
+.rule-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: 0.3s;
+  font-family: "Inter", sans-serif;
+}
+
+.rule-input:focus {
+  border-color: #8b5cf6;
+  outline: none;
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.4);
+}
+
+/* Remove Rule Button */
+.btn-remove {
+  background-color: #f6416c;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.btn-remove:hover {
+  background-color: #c1294c;
+}
+
+/* Add Rule Button */
+.btn-add-rule {
+  background-color: #6a67ce;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.3s;
+}
+
+.btn-add-rule:hover {
+  background-color: #5548c2;
+}
