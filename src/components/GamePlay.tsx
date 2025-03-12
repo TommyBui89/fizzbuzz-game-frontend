@@ -8,7 +8,7 @@ interface GamePlayProps {
   onGameEnd: (score: { correct: number; incorrect: number }) => void;
 }
 
-const API_BASE_URL = "http://localhost:5227/api/game";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/game";
 
 const GamePlay: React.FC<GamePlayProps> = ({ duration, onGameEnd }) => {
   const navigate = useNavigate();

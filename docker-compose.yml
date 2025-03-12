@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    image: fizzbuzzgamebackend
+    build:
+      context: ../fizzbuzz-game-backend/fizzbuzz-game-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Data Source=/app/fizzbuzz.db
+    volumes:
+      - sqlite_data:/app
+
+  frontend:
+    image: fizzbuzzgamefrontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - VITE_API_BASE_URL=http://backend:8080
+    ports:
+      - "4173:4173"
+    depends_on:
+      - backend
+
+volumes:
+  sqlite_data:

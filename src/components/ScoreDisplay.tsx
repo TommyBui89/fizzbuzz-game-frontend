@@ -1,6 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import navigation
-import '../styles/ScoreDisplay.css'; // Import custom styles
+import { useNavigate } from 'react-router-dom';
+import '../styles/ScoreDisplay.css';
 
 interface ScoreDisplayProps {
   score: {
@@ -11,7 +11,7 @@ interface ScoreDisplayProps {
 }
 
 const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ score, onRestart }) => {
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate();
 
   return (
     <div className="score-container">

@@ -9,19 +9,16 @@ const GamePage: React.FC = () => {
   const [duration, setDuration] = useState<number>(60);
   const [finalScore, setFinalScore] = useState<{ correct: number; incorrect: number } | null>(null);
 
-  // Callback from GameSetup: receives the game duration then starts the game
   const handleStart = (gameDuration: number) => {
     setDuration(gameDuration);
     setPhase('play');
   };
 
-  // Callback from GamePlay: receives the final score then moves to score display phase
   const handleGameEnd = (score: { correct: number; incorrect: number }) => {
     setFinalScore(score);
     setPhase('score');
   };
 
-  // Optionally restart the game
   const handleRestart = () => {
     setFinalScore(null);
     setPhase('setup');
