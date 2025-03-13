@@ -4,7 +4,6 @@ import { createGame, getGameById, updateGame } from "../api";
 import { Game } from "../types";
 import RuleFields from "../components/RuleFields";
 
-// Import styles
 import "../styles/gameForm.css";
 import "../styles/buttons.css";
 
@@ -18,6 +17,9 @@ const GameForm: React.FC = () => {
     author: "",
     rules: [],
   });
+
+  const [error, setError] = useState<string | null>(null);
+  const [shakeClass, setShakeClass] = useState("");
 
   useEffect(() => {
     if (isEdit && id) {
@@ -48,9 +50,17 @@ const GameForm: React.FC = () => {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (game.rules.length === 0) {
+      setError("You must add at least one rule before creating a game.");
+      setShakeClass("shake error-glow");
+
+      setTimeout(() => setShakeClass(""), 1000);
+      return;
+    }
+
     try {
       if (isEdit && id) {
-        // Update an existing game
         await updateGame(parseInt(id), {
           id: parseInt(id),
           name: game.name,
@@ -62,7 +72,6 @@ const GameForm: React.FC = () => {
         });
         alert("Game updated!");
       } else {
-        // Create a new game and return to the games list
         await createGame({
           name: game.name,
           author: game.author,
@@ -73,18 +82,17 @@ const GameForm: React.FC = () => {
         });
         alert("Game created!");
       }
-  
-      // Redirect to the Games List
+
       navigate("/games");
     } catch (error) {
       console.error(error);
       alert("Failed to save game");
     }
-  }  
+  }
 
   return (
     <div className="game-form-container fade-in">
-      <div className="game-form-card">
+      <div className={`game-form-card ${shakeClass}`}>
         <h1 className="form-title">{isEdit ? "Edit Game" : "Create Game"}</h1>
 
         <form onSubmit={handleSubmit}>
@@ -110,8 +118,9 @@ const GameForm: React.FC = () => {
             />
           </div>
 
-          {/* RuleFields Component */}
           <RuleFields rules={game.rules} onChange={handleRulesChange} />
+
+          {error && <p className="error-message">{error}</p>}
 
           <div className="button-group">
             <button type="submit" className="btn-submit">

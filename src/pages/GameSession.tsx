@@ -5,11 +5,18 @@ import {
   GameSessionResponse,
   SubmitAnswerResponse,
   SubmitAnswerRequest,
+  Game,
 } from "../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faClock, faRedo, faPlay, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faClock,
+  faRedo,
+  faPlay,
+  faCheck,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 
-// Import styles
 import "../styles/gameSession.css";
 import "../styles/buttons.css";
 import "../styles/animations.css";
@@ -18,8 +25,7 @@ const GameSession: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // State
-  const [gameName, setGameName] = useState("");
+  const [game, setGame] = useState<Game | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [currentNumber, setCurrentNumber] = useState<number | null>(null);
   const [answer, setAnswer] = useState("");
@@ -29,17 +35,16 @@ const GameSession: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [cardState, setCardState] = useState("");
 
-  // Fetch game name
   useEffect(() => {
     if (id) {
-      fetchGameName(parseInt(id));
+      fetchGame(parseInt(id));
     }
   }, [id]);
 
-  async function fetchGameName(gameId: number) {
+  async function fetchGame(gameId: number) {
     try {
-      const game = await getGameById(gameId);
-      setGameName(game.name);
+      const gameData = await getGameById(gameId);
+      setGame(gameData);
     } catch (error) {
       console.error(error);
     }
@@ -79,7 +84,7 @@ const GameSession: React.FC = () => {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!sessionId || timeLeft <= 0) return;
-    
+
     const request: SubmitAnswerRequest = { answer };
     try {
       const data: SubmitAnswerResponse = await submitAnswer(sessionId, request);
@@ -116,17 +121,34 @@ const GameSession: React.FC = () => {
     <div className="game-session-container fade-in">
       <div className={`game-session-box ${cardState}`}>
         <h1 className="session-title">Game Session</h1>
-        {gameName && <h2 className="session-subtitle">Playing: {gameName}</h2>}
+        {game && <h2 className="session-subtitle">Playing: {game.name}</h2>}
 
         {!sessionId ? (
           <div className="session-start">
-            <label>Set Duration (seconds):</label>
+            <label>
+              <FontAwesomeIcon icon={faClock} /> Set Duration (seconds):
+            </label>
             <input
               type="number"
               value={userDuration}
               onChange={(e) => setUserDuration(parseInt(e.target.value) || 0)}
               className="session-input"
             />
+
+            {/* Display game rules before starting */}
+            {game && game.rules.length > 0 && (
+              <div className="rules-list">
+                <h3>Game Rules:</h3>
+                <div className="rules-container">
+                  {game.rules.map((rule, index) => (
+                    <p key={index} className="rule-item">
+                      If divisible by {rule.divisor}, replace with "<strong>{rule.replacementText}</strong>"
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="session-buttons">
               <button className="btn-primary" onClick={handleStartSession}>
                 <FontAwesomeIcon icon={faPlay} /> Start Session
@@ -140,28 +162,46 @@ const GameSession: React.FC = () => {
           <>
             <div className="digital-clock">{formattedTime}</div>
             <p className="score-info">
-              ✅ {correctCount} Correct | ❌ {incorrectCount} Incorrect
+              <FontAwesomeIcon icon={faCheck} /> {correctCount} Correct |{" "}
+              <FontAwesomeIcon icon={faTimes} /> {incorrectCount} Incorrect
             </p>
+
+            {game && game.rules.length > 0 && (
+              <div className="rules-list">
+                <h3>Game Rules:</h3>
+                <div className="rules-container">
+                  {game.rules.map((rule, index) => (
+                    <p key={index} className="rule-item">
+                      If divisible by {rule.divisor}, replace with "<strong>{rule.replacementText}</strong>"
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {timeLeft === 0 || currentNumber === null ? (
               <div className="session-complete">
-                <p>⏳ Time is up! Session complete.</p>
-                <button className="btn-restart" onClick={handleRestart}>
-                  <FontAwesomeIcon icon={faRedo} /> Restart
-                </button>
-                <button className="btn-go-home" onClick={() => navigate("/games")}>
-                  <FontAwesomeIcon icon={faHome} /> Go Home
-                </button>
+                <p>
+                  <FontAwesomeIcon icon={faClock} /> Time is up! Session complete.
+                </p>
+                <div className="session-buttons">
+                  <button className="btn-restart" onClick={handleRestart}>
+                    <FontAwesomeIcon icon={faRedo} /> Restart
+                  </button>
+                  <button className="btn-go-home" onClick={() => navigate("/games")}>
+                    <FontAwesomeIcon icon={faHome} /> Go Home
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="question-section">
                 <h3 className="question-number">Number: {currentNumber}</h3>
                 <form onSubmit={handleSubmit} className="session-form">
-                  <input 
-                    type="text" 
-                    value={answer} 
-                    onChange={(e) => setAnswer(e.target.value)} 
-                    required 
+                  <input
+                    type="text"
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    required
                     className="session-input"
                   />
                   <button className="btn-submit">

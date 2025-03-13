@@ -5,7 +5,6 @@ import { getGames, deleteGame } from "../api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit, faTrash, faPlay } from "@fortawesome/free-solid-svg-icons";
 
-// Import styles
 import "../styles/gamesList.css";
 import "../styles/buttons.css";
 import "../styles/animations.css";

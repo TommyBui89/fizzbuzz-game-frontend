@@ -3,7 +3,6 @@ import { Rule } from "../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 
-// Import styles
 import "../styles/ruleFields.css";
 import "../styles/buttons.css";
 

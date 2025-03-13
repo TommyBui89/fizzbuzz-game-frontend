@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Inter:wght@300;400;600&display=swap");
 
-/* Apply fonts globally */
 body {
   font-family: "Poppins", "Inter", sans-serif;
 }
@@ -58,7 +57,7 @@ body {
 
 /* Input Fields */
 .session-input {
-  width: 100%;
+  width: -webkit-fill-available;
   padding: 12px;
   border: 2px solid #ccc;
   border-radius: 8px;
